@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const { v4: uuid } = require("uuid");
+const cors = require("cors");
 
 const PORT = process.env.PORT || 3000;
 const VERSION = "v1";
@@ -9,12 +10,17 @@ const USERTOKEN = "21333";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 app.use((request, response, next) => {
   const token = request.headers.authorization;
-  if (request.headers.authorization) {
+  if (!!request.headers.authorization) {
     request.is_authorized = !!token;
     request.is_admin = token === ADMINTOKEN;
-    next();
   }
   next();
 });
