@@ -6,9 +6,9 @@ const employeeRouter = require("./employee");
 const router = new Router();
 const VERSION = "v1";
 
-router.use(`/api/${VERSION}`, departmentRouter);
-router.use(`/api/${VERSION}`, employeeRouter);
-router.use(`/api/${VERSION}`, userRouter);
+router.use(`/${VERSION}`, departmentRouter);
+router.use(`/${VERSION}`, employeeRouter);
+router.use(`/${VERSION}`, userRouter);
 
 router.get("*", (request, response) => {
   return response

@@ -1,11 +1,10 @@
 const Router = require("express");
 const employeeRouter = new Router();
-const controller = require("../controllers/employee");
+const EmployeeController = require("../controllers/employee");
 
-employeeRouter.get(`/employees`, controller.getEmployees);
-employeeRouter.post(`/employees/new`, controller.postNewEmployee);
-employeeRouter.get(`/employees/:id`, controller.getEmployeeByID);
-employeeRouter.put(`/employees/:id/edit`, controller.updateEmployeeByID);
-employeeRouter.delete(`/employees/:id/delete`, controller.deleteEmployeeByID);
+employeeRouter.post(`/employees`, EmployeeController.createNewEmployee);
+employeeRouter.get(`/employees/:id`, EmployeeController.getEmployeeByID);
+employeeRouter.patch(`/employees/:id`, EmployeeController.updateEmployeeByID);
+employeeRouter.delete(`/employees/:id`, EmployeeController.deleteEmployeeByID);
 
 module.exports = employeeRouter;

@@ -1,3 +1,5 @@
 node_modules
+avatars/*.*
 !*/config.js
 config.js
+.env

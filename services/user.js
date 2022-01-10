@@ -1,17 +1,6 @@
 const UserSchema = require("../models/user");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET_KEY } = require("../config");
 
-const generateAccessToken = (id, role) => {
-  const payload = {
-    id,
-    role,
-  };
-  return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "24h" });
-};
-
-class UserController {
+class UserService {
   async login(request, response) {
     try {
       const { username, password } = request.body;
@@ -31,5 +20,4 @@ class UserController {
     }
   }
 }
-
-module.exports = new UserController();
+module.exports = new UserService();

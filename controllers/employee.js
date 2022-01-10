@@ -1,31 +1,42 @@
-const Employee = require("../models/employee");
+const EmployeeService = require("../services/employee");
 
-class employeeController {
-  async getEmployees(request, response) {
+class EmployeeController {
+  async createNewEmployee(request, response) {
     try {
-      const employees = await Employee.find();
-      return response.status(200).json({ employees });
+      const employee = await EmployeeService.createNewEmployee(request.body, request.files.picture);
+      return response.status(200).json({ employee });
     } catch (e) {
       console.log(e);
       return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
     }
   }
-  async postNewEmployee(request, response) {
-    try {
-    } catch (e) {}
-  }
   async getEmployeeByID(request, response) {
     try {
-    } catch (e) {}
+      const employeeByID = await EmployeeService.getEmployeeByID(request.params.id);
+      return response.status(200).json({ employeeByID });
+    } catch (e) {
+      console.log(e);
+      return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
+    }
   }
   async updateEmployeeByID(request, response) {
     try {
-    } catch (e) {}
+      const updatedEmployee = await EmployeeService.updateDepartmentByID(request.body);
+      return response.status(200).json({ updatedEmployee });
+    } catch (e) {
+      console.log(e);
+      return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
+    }
   }
   async deleteEmployeeByID(request, response) {
     try {
-    } catch (e) {}
+      const employeeToDelete = await EmployeeService.deleteEmployeeByID(request.params.id);
+      return response.status(200).json({ employeeToDelete });
+    } catch (e) {
+      console.log(e);
+      return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
+    }
   }
 }
 
-module.exports = new employeeController();
+module.exports = new EmployeeController();

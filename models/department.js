@@ -1,10 +1,36 @@
 const { Schema, model } = require("mongoose");
 
-const Department = new Schema({
-  name: { type: String, required: true, unique: true },
-  description: { type: String, required: true },
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date },
-});
+const DepartmentSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+      immutable: true,
+      minlength: 2,
+      maxlength: 50,
+      match: [
+        /^[A-Z]{1}[a-z]*/i,
+        "Department name should start from the capital letter, it can contain up to 50 symbols and cannot have numbers.",
+      ],
+    },
+    description: {
+      type: String,
+      required: true,
+      minlength: 5,
+      maxlength: 250,
+      match: [
+        /^[A-Z]{1,}[a-z0-9]*/i,
+        "Department description should start from the capital letter and should contain up to 250 symbols.",
+      ],
+    },
+    picture: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = model("Department", Department);
+module.exports = model("Department", DepartmentSchema);
