@@ -555,6 +555,19 @@ app.get(`/api/${VERSION}/departments/:id`, (request, response) => {
   }
 });
 
+app.get(`/api/${VERSION}/departments/:id/employees`, (request, response) => {
+  if (request.is_authorized) {
+    const { id } = request.params;
+    const departmentById = departments.find((department) => department.id === parseInt(id));
+    const employeeByDepartmentId = departmentById.employees;
+    return response.status(200).json({ employeeByDepartmentId });
+  } else {
+    return response
+      .status(403)
+      .json({ message: "Forbidden: You do not have permission to access this recourse." });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server has been started on PORT: ${PORT}`);
 });
