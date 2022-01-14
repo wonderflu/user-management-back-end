@@ -2,9 +2,9 @@ const Router = require("express");
 const userRouter = require("./user");
 const departmentRouter = require("./department");
 const employeeRouter = require("./employee");
+const { VERSION } = require("../config");
 
 const router = new Router();
-const VERSION = "v1";
 
 router.use(`/${VERSION}`, departmentRouter);
 router.use(`/${VERSION}`, employeeRouter);
