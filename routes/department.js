@@ -1,5 +1,6 @@
 const Router = require("express");
 const departmentRouter = new Router();
+
 const DepartmentController = require("../controllers/department");
 
 departmentRouter.post(`/departments`, DepartmentController.createNewDepartment);

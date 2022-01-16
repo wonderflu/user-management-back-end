@@ -1,5 +1,6 @@
 const Router = require("express");
 const employeeRouter = new Router();
+
 const EmployeeController = require("../controllers/employee");
 
 employeeRouter.post(`/employees`, EmployeeController.createNewEmployee);

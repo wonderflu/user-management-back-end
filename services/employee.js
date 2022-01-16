@@ -19,6 +19,9 @@ class EmployeeService {
     return createdEmployee;
   }
   async getEmployeesByDepartmentID(departmentID) {
+    if (!departmentID) {
+      throw new Error("Department ID is required");
+    }
     const employeesByDepartmentID = await EmployeeSchema.find({ department: departmentID });
     return employeesByDepartmentID;
   }
