@@ -11,22 +11,20 @@ class UserController {
       });
       return response.status(200).json({ user });
     } catch (e) {
-      console.log(e);
-      return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
+      next(e);
     }
   }
-  async logout(request, response) {
+  async logout(request, response, next) {
     try {
       const { refreshToken } = request.cookies;
       const token = await UserService.logout(refreshToken);
       response.clearCookie("refreshToken");
       return response.status(200).json({ token });
     } catch (e) {
-      console.log(e);
-      return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
+      next(e);
     }
   }
-  async refreshToken(request, response) {
+  async refreshToken(request, response, next) {
     try {
       const { refreshToken } = request.cookies;
       const userData = await UserService.refreshToken(refreshToken);
@@ -36,8 +34,7 @@ class UserController {
       });
       return response.status(200).json({ userData });
     } catch (e) {
-      console.log(e);
-      return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
+      next(e);
     }
   }
 }

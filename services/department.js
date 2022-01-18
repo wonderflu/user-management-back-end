@@ -1,5 +1,6 @@
 const DepartmentSchema = require("../models/department");
 const FileService = require("./file");
+const ClientError = require("../errors");
 
 class DepartmentService {
   async createNewDepartment(department, picture) {
@@ -7,7 +8,9 @@ class DepartmentService {
     const { name } = department;
     const departmentDuplicate = await DepartmentSchema.findOne({ name });
     if (departmentDuplicate) {
-      throw new Error(`Bad request: Department with such name already exists.`);
+      throw ClientError.BadRequest("Department with such name already exists.", [
+        { name: "this field should be unique" },
+      ]);
     }
     const createdDepartment = await DepartmentSchema.create({ ...department, picture: fileName });
     return createdDepartment;

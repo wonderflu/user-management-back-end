@@ -7,6 +7,7 @@ const fileUpload = require("express-fileupload");
 
 const router = require("./routes");
 const { PORT, DATABASE_URL } = require("./config");
+const errorMiddleware = require("./middlewares/error");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(
   })
 );
 app.use("/api", router);
+app.use(errorMiddleware);
 
 async function start() {
   try {

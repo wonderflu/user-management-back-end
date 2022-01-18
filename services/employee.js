@@ -1,5 +1,6 @@
 const EmployeeSchema = require("../models/employee");
 const FileService = require("./file");
+const ClientError = require("../errors");
 
 class EmployeeService {
   async createNewEmployee(employee, picture) {
@@ -7,13 +8,15 @@ class EmployeeService {
     const { username, email } = employee;
     const usernameDuplicate = await EmployeeSchema.findOne({ username });
     if (usernameDuplicate) {
-      return response
-        .status(400)
-        .json({ message: `Bad request: User with such ${username} already exists.` });
+      throw ClientError.BadRequest(`User with such ${username} already exists.`, [
+        { username: "this field should be unique" },
+      ]);
     }
     const emailDuplicate = await EmployeeSchema.findOne({ email });
     if (emailDuplicate) {
-      return response.status(400).json({ message: `Bad request: User with such ${email} already exists.` });
+      throw ClientError.BadRequest(`User with such ${email} already exists.`, [
+        { email: "this field should be unique" },
+      ]);
     }
     const createdEmployee = await EmployeeSchema.create({ ...employee, picture: fileName });
     return createdEmployee;
@@ -32,14 +35,14 @@ class EmployeeService {
     const employeeById = await EmployeeSchema.findById(id);
     return employeeById;
   }
-  async updateEmployeeByID(request, response) {
-    try {
-      const updatedEmployee = await EmployeeService.updateDepartmentByID(request.body);
-      return response.status(200).json({ updatedEmployee });
-    } catch (e) {
-      console.log(e);
-      return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
+  async updateEmployeeByID(employee) {
+    if (!employee._id) {
+      throw new Error("ID is required");
     }
+    const updatedEmployee = await EmployeeSchema.findByIdAndUpdate(employee._id, employee, {
+      new: true,
+    });
+    return updatedEmployee;
   }
   async deleteEmployeeByID(id) {
     if (!id) {
