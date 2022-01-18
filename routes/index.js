@@ -5,11 +5,13 @@ const departmentRouter = require("./department");
 const employeeRouter = require("./employee");
 const { VERSION } = require("../config");
 const authMiddleware = require("../middlewares/auth");
+const adminRightsMiddleware = require("../middlewares/isAdmin");
 
 const router = new Router();
 
 router.use(`/${VERSION}`, userRouter);
 router.use(`/${VERSION}`, authMiddleware);
+router.use(`/${VERSION}/*`, adminRightsMiddleware);
 router.use(`/${VERSION}`, departmentRouter);
 router.use(`/${VERSION}`, employeeRouter);
 

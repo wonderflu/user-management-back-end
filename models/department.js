@@ -4,7 +4,7 @@ const DepartmentSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Name is required."],
       unique: true,
       immutable: true,
       minlength: 2,
@@ -16,7 +16,7 @@ const DepartmentSchema = new Schema(
     },
     description: {
       type: String,
-      required: true,
+      required: [true, "Description is required."],
       minlength: 5,
       maxlength: 250,
       match: [
