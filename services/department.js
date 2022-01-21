@@ -1,4 +1,5 @@
 const DepartmentSchema = require("../models/department");
+const EmployeeSchema = require("../models/employee");
 const FileService = require("./file");
 const ClientError = require("../errors");
 
@@ -42,8 +43,15 @@ class DepartmentService {
     if (!id) {
       throw new Error("ID is required");
     }
-    const departmentToDelete = await DepartmentSchema.findByIdAndDelete(id);
-    return departmentToDelete;
+    const employeesInDepartment = await EmployeeSchema.findOne({ department: id }).count();
+    if (!employeesInDepartment) {
+      const departmentToDelete = await DepartmentSchema.findByIdAndDelete(id);
+      return departmentToDelete;
+    } else {
+      throw ClientError.BadRequest("Cannot delete department with employees.", [
+        { department: "Department should be empty before its deletation." },
+      ]);
+    }
   }
 }
 

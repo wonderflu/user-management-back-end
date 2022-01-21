@@ -8,6 +8,6 @@ departmentRouter.get(`/departments`, DepartmentController.getDepartments);
 departmentRouter.get(`/departments/:id`, DepartmentController.getDepartmentByID);
 departmentRouter.get(`/departments/:id/employees`, DepartmentController.getEmployeesByDepartmentID);
 departmentRouter.put(`/departments/:id`, DepartmentController.updateDepartmentByID);
-departmentRouter.delete(`/departments/:id`, DepartmentController.deleteDepartmentByID); // need to check if it is not empty then cannot delete, add middleware?
+departmentRouter.delete(`/departments/:id`, DepartmentController.deleteDepartmentByID);
 
 module.exports = departmentRouter;
