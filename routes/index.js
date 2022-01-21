@@ -6,6 +6,7 @@ const employeeRouter = require("./employee");
 const { VERSION } = require("../config");
 const authMiddleware = require("../middlewares/auth");
 const adminRightsMiddleware = require("../middlewares/isAdmin");
+const ClientError = require("../errors");
 
 const router = new Router();
 
@@ -15,10 +16,8 @@ router.use(`/${VERSION}/*`, adminRightsMiddleware);
 router.use(`/${VERSION}`, departmentRouter);
 router.use(`/${VERSION}`, employeeRouter);
 
-router.use("*", (request, response) => {
-  return response
-    .status(404)
-    .json({ message: "Not Found: Whooops! Page with such url doesn't exist, try again!" });
+router.all("/*", () => {
+  throw ClientError.NotFound();
 });
 
 module.exports = router;

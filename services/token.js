@@ -33,7 +33,7 @@ class TokenService {
     try {
       const userData = jwt.verify(token, JWT_ACCESS_KEY);
       return userData;
-    } catch (e) {
+    } catch (error) {
       return null;
     }
   }
@@ -41,7 +41,7 @@ class TokenService {
     try {
       const userData = jwt.verify(token, JWT_REFRESH_KEY);
       return userData;
-    } catch (e) {
+    } catch (error) {
       return null;
     }
   }

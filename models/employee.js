@@ -4,7 +4,7 @@ const EmployeeSchema = new Schema(
   {
     username: {
       type: String,
-      required: true,
+      required: [true, "Username is required."],
       unique: true,
       immutable: true,
       minlength: 3,
@@ -16,7 +16,7 @@ const EmployeeSchema = new Schema(
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "Email is required."],
       unique: true,
       minlength: 5,
       maxlength: 30,
@@ -24,7 +24,7 @@ const EmployeeSchema = new Schema(
     },
     first_name: {
       type: String,
-      required: true,
+      required: [true, "First Name is required."],
       minlength: 1,
       maxlength: 20,
       // match: [
@@ -34,7 +34,7 @@ const EmployeeSchema = new Schema(
     },
     last_name: {
       type: String,
-      required: true,
+      required: [true, "Last Name is required."],
       minlength: 1,
       maxlength: 20,
       // match: [
@@ -48,7 +48,7 @@ const EmployeeSchema = new Schema(
     department: {
       type: Schema.Types.ObjectId,
       ref: "Department",
-      required: true,
+      required: [true, "Department is required."],
     },
   },
   {

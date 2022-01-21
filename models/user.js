@@ -4,19 +4,19 @@ const UserSchema = new Schema(
   {
     role: {
       type: String,
-      required: true,
+      required: [true, "Role is required."],
       unique: true,
       enum: ["USER", "ADMIN"],
       default: "USER",
     },
     username: {
       type: String,
-      required: true,
+      required: [true, "Username is required."],
       unique: true,
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Password is required."],
     },
   },
   {

@@ -8,8 +8,8 @@ class FileService {
       const filePath = path.resolve("avatars", fileName);
       file.mv(filePath);
       return fileName;
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
     }
   }
 }

@@ -7,6 +7,7 @@ const fileUpload = require("express-fileupload");
 
 const router = require("./routes");
 const { PORT, DATABASE_URL } = require("./config");
+const checkUserExistence = require("./seed/checkUserExistence");
 const errorMiddleware = require("./middlewares/error");
 
 const app = express();
@@ -31,8 +32,9 @@ async function start() {
     app.listen(PORT, () => {
       console.log(`Server has been started on PORT: ${PORT}`);
     });
-  } catch (e) {
-    console.log(e);
+    await checkUserExistence();
+  } catch (error) {
+    console.error(error);
   }
 }
 start();

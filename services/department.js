@@ -24,6 +24,9 @@ class DepartmentService {
       throw new Error("ID is required");
     }
     const departmentByID = await DepartmentSchema.findById(id);
+    if (!departmentByID) {
+      throw ClientError.BadRequest("Department with such ID does not exist.");
+    }
     return departmentByID;
   }
   async updateDepartmentByID(department) {

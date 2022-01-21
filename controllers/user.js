@@ -10,8 +10,8 @@ class UserController {
         httpOnly: true,
       });
       return response.status(200).json({ user });
-    } catch (e) {
-      next(e);
+    } catch (error) {
+      next(error);
     }
   }
   async logout(request, response, next) {
@@ -20,8 +20,8 @@ class UserController {
       const token = await UserService.logout(refreshToken);
       response.clearCookie("refreshToken");
       return response.status(200).json({ token });
-    } catch (e) {
-      next(e);
+    } catch (error) {
+      next(error);
     }
   }
   async refreshToken(request, response, next) {
@@ -33,8 +33,8 @@ class UserController {
         httpOnly: true,
       });
       return response.status(200).json({ userData });
-    } catch (e) {
-      next(e);
+    } catch (error) {
+      next(error);
     }
   }
 }

@@ -33,6 +33,9 @@ class EmployeeService {
       throw new Error("ID is required");
     }
     const employeeById = await EmployeeSchema.findById(id);
+    if (!employeeById) {
+      throw ClientError.BadRequest("Employee with such ID does not exist.");
+    }
     return employeeById;
   }
   async updateEmployeeByID(employee) {
