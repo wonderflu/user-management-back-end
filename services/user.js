@@ -13,7 +13,7 @@ class UserService {
         { username: "Only one user can be with such username" },
       ]);
     }
-    const validPassword = bcrypt.compareSync(password, user.password);
+    const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       throw ClientError.BadRequest("The password is incorrect");
     }

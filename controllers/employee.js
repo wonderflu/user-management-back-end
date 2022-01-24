@@ -1,8 +1,14 @@
 const EmployeeService = require("../services/employee");
+const employeeValidator = require("../validations/employee");
+const ClientError = require("../errors");
 
 class EmployeeController {
   async createNewEmployee(request, response, next) {
     try {
+      const { error } = employeeValidator(request.body);
+      if (error) {
+        throw ClientError.BadRequest(error.details[0].message);
+      }
       const employee = await EmployeeService.createNewEmployee(request.body, request.files.picture);
       return response.status(200).json({ employee });
     } catch (error) {

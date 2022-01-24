@@ -3,6 +3,8 @@ const EmployeeSchema = require("../models/employee");
 const FileService = require("./file");
 const ClientError = require("../errors");
 
+const mongoose = require("mongoose");
+
 class DepartmentService {
   async createNewDepartment(department, picture) {
     const fileName = FileService.saveFile(picture);
@@ -21,8 +23,8 @@ class DepartmentService {
     return departments;
   }
   async getDepartmentByID(id) {
-    if (!id) {
-      throw new Error("ID is required");
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw ClientError.BadRequest("ID is invalid");
     }
     const departmentByID = await DepartmentSchema.findById(id);
     if (!departmentByID) {
@@ -31,8 +33,8 @@ class DepartmentService {
     return departmentByID;
   }
   async updateDepartmentByID(department) {
-    if (!department._id) {
-      throw new Error("ID is required");
+    if (!mongoose.Types.ObjectId.isValid(department._id)) {
+      throw ClientError.BadRequest("ID is invalid");
     }
     const updatedDepartment = await DepartmentSchema.findByIdAndUpdate(department._id, department, {
       new: true,
@@ -40,8 +42,8 @@ class DepartmentService {
     return updatedDepartment;
   }
   async deleteDepartmentByID(id) {
-    if (!id) {
-      throw new Error("ID is required");
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw ClientError.BadRequest("ID is invalid");
     }
     const employeesInDepartment = await EmployeeSchema.findOne({ department: id }).count();
     if (!employeesInDepartment) {
