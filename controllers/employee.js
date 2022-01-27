@@ -1,43 +1,21 @@
 const EmployeeService = require("../services/employee");
-const employeeValidator = require("../validations/employee");
-const ClientError = require("../errors");
 
 class EmployeeController {
   async createNewEmployee(request, response, next) {
-    try {
-      const { error } = employeeValidator(request.body);
-      if (error) {
-        throw ClientError.BadRequest(error.details[0].message);
-      }
-      const employee = await EmployeeService.createNewEmployee(request.body, request.files.picture);
-      return response.status(200).json({ employee });
-    } catch (error) {
-      next(error);
-    }
+    const employee = await EmployeeService.createNewEmployee(request.body, request.files.picture);
+    response.json({ employee });
   }
   async getEmployeeByID(request, response, next) {
-    try {
-      const employeeByID = await EmployeeService.getEmployeeByID(request.params.id);
-      return response.status(200).json({ employeeByID });
-    } catch (error) {
-      next(error);
-    }
+    const employeeByID = await EmployeeService.getEmployeeByID(request.params.id);
+    response.json({ employeeByID });
   }
   async updateEmployeeByID(request, response, next) {
-    try {
-      const updatedEmployee = await EmployeeService.updateDepartmentByID(request.body);
-      return response.status(200).json({ updatedEmployee });
-    } catch (error) {
-      next(error);
-    }
+    const updatedEmployee = await EmployeeService.updateDepartmentByID(request.body);
+    response.json({ updatedEmployee });
   }
   async deleteEmployeeByID(request, response, next) {
-    try {
-      const employeeToDelete = await EmployeeService.deleteEmployeeByID(request.params.id);
-      return response.status(200).json({ employeeToDelete });
-    } catch (error) {
-      next(error);
-    }
+    const employeeToDelete = await EmployeeService.deleteEmployeeByID(request.params.id);
+    response.json({ employeeToDelete });
   }
 }
 

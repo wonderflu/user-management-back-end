@@ -6,7 +6,7 @@ const employeeRouter = require("./employee");
 const { VERSION } = require("../config");
 const authMiddleware = require("../middlewares/auth");
 const adminRightsMiddleware = require("../middlewares/isAdmin");
-const ClientError = require("../errors");
+const CustomHTTPError = require("../errors");
 
 const router = new Router();
 
@@ -16,8 +16,8 @@ router.use(`/${VERSION}/*`, adminRightsMiddleware);
 router.use(`/${VERSION}`, departmentRouter);
 router.use(`/${VERSION}`, employeeRouter);
 
-router.all("/*", () => {
-  throw ClientError.NotFound();
+router.all("*", (request, response, next) => {
+  next(CustomHTTPError.NotFound());
 });
 
 module.exports = router;

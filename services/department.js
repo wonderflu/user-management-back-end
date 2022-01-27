@@ -1,7 +1,7 @@
 const DepartmentSchema = require("../models/department");
 const EmployeeSchema = require("../models/employee");
 const FileService = require("./file");
-const ClientError = require("../errors");
+const CustomHTTPError = require("../errors");
 
 const mongoose = require("mongoose");
 
@@ -11,7 +11,7 @@ class DepartmentService {
     const { name } = department;
     const departmentDuplicate = await DepartmentSchema.findOne({ name });
     if (departmentDuplicate) {
-      throw ClientError.BadRequest("Department with such name already exists.", [
+      throw CustomHTTPError.BadRequest("Department with such name already exists.", [
         { name: "this field should be unique" },
       ]);
     }
@@ -24,17 +24,17 @@ class DepartmentService {
   }
   async getDepartmentByID(id) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw ClientError.BadRequest("ID is invalid");
+      throw CustomHTTPError.BadRequest("ID is invalid");
     }
     const departmentByID = await DepartmentSchema.findById(id);
     if (!departmentByID) {
-      throw ClientError.BadRequest("Department with such ID does not exist.");
+      throw CustomHTTPError.BadRequest("Department with such ID does not exist.");
     }
     return departmentByID;
   }
   async updateDepartmentByID(department) {
     if (!mongoose.Types.ObjectId.isValid(department._id)) {
-      throw ClientError.BadRequest("ID is invalid");
+      throw CustomHTTPError.BadRequest("ID is invalid");
     }
     const updatedDepartment = await DepartmentSchema.findByIdAndUpdate(department._id, department, {
       new: true,
@@ -43,14 +43,14 @@ class DepartmentService {
   }
   async deleteDepartmentByID(id) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw ClientError.BadRequest("ID is invalid");
+      throw CustomHTTPError.BadRequest("ID is invalid");
     }
-    const employeesInDepartment = await EmployeeSchema.findOne({ department: id }).count();
+    const employeesInDepartment = await EmployeeSchema.find({ department: id }).count();
     if (!employeesInDepartment) {
       const departmentToDelete = await DepartmentSchema.findByIdAndDelete(id);
       return departmentToDelete;
     } else {
-      throw ClientError.BadRequest("Cannot delete department with employees.", [
+      throw CustomHTTPError.BadRequest("Cannot delete department with employees.", [
         { department: "Department should be empty before its deletation." },
       ]);
     }

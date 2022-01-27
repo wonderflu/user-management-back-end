@@ -8,7 +8,7 @@ const fileUpload = require("express-fileupload");
 const router = require("./routes");
 const { PORT, DATABASE_URL } = require("./config");
 const checkUserExistence = require("./seed/checkUserExistence");
-const errorMiddleware = require("./middlewares/error");
+const errorMiddleware = require("./middlewares/errorHandler");
 
 const app = express();
 

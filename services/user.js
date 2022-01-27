@@ -1,7 +1,7 @@
 const UserSchema = require("../models/user");
 const UserDto = require("../dtos/user");
 const TokenService = require("./token");
-const ClientError = require("../errors");
+const CustomHTTPError = require("../errors");
 
 const bcrypt = require("bcryptjs");
 
@@ -9,13 +9,11 @@ class UserService {
   async login(username, password) {
     const user = await UserSchema.findOne({ username });
     if (!user) {
-      throw ClientError.BadRequest(`User with such ${username} is not found`, [
-        { username: "Only one user can be with such username" },
-      ]);
+      throw CustomHTTPError.BadRequest(`User with name ${username} is not found`);
     }
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      throw ClientError.BadRequest("The password is incorrect");
+      throw CustomHTTPError.BadRequest("The password is incorrect");
     }
     const userDto = new UserDto(user);
     const tokens = TokenService.generateTokens({ ...userDto });
@@ -28,12 +26,12 @@ class UserService {
   }
   async refreshToken(refreshToken) {
     if (!refreshToken) {
-      throw ClientError.UnauthorizedError();
+      throw CustomHTTPError.UnauthorizedError();
     }
     const userData = TokenService.decodeRefreshToken(refreshToken);
     const tokenFromDB = await TokenService.findToken(refreshToken);
     if (!userData || !tokenFromDB) {
-      throw ClientError.UnauthorizedError();
+      throw CustomHTTPError.UnauthorizedError();
     }
     const user = await UserSchema.findById(user.id);
     const userDto = new UserDto(user);

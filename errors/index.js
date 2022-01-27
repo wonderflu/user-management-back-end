@@ -1,21 +1,19 @@
-module.exports = class ClientError extends Error {
+module.exports = class CustomHTTPError extends Error {
   status;
-  errors;
-  constructor(status, message, errors = []) {
+  constructor(status, message) {
     super(message);
     this.status = status;
-    this.errors = errors;
   }
-  static BadRequest(message, errors = []) {
-    return new ClientError(400, message, errors);
+  static BadRequest(message) {
+    return new CustomHTTPError(400, message);
   }
   static UnauthorizedError() {
-    return new ClientError(401, "User is not authorized.");
+    return new CustomHTTPError(401, "User is not authorized.");
   }
   static Forbidden() {
-    return new ClientError(403, "You do not have permission to access this resource.");
+    return new CustomHTTPError(403, "You do not have permission to access this resource.");
   }
   static NotFound() {
-    return new ClientError(404, "The page you are looking for was not found.");
+    return new CustomHTTPError(404, "The page you are looking for was not found.");
   }
 };

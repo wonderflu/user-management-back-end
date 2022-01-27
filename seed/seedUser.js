@@ -2,7 +2,7 @@ const UserSchema = require("../models/user");
 const bcrypt = require("bcryptjs");
 const { SALT } = require("../config");
 
-class seedUsers {
+class SeedUsers {
   async createAdmin() {
     try {
       const role = "ADMIN";
@@ -29,4 +29,4 @@ class seedUsers {
   }
 }
 
-module.exports = new seedUsers();
+module.exports = new SeedUsers();

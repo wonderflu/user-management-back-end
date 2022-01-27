@@ -1,6 +1,7 @@
 const Joi = require("joi");
+const CustomHTTPError = require("../errors");
 
-const employeeValidator = (employee) => {
+const employeeValidator = (request, response, next) => {
   const schema = Joi.object({
     username: Joi.string().alphanum().min(3).max(15).required(),
     email: Joi.string()
@@ -14,7 +15,11 @@ const employeeValidator = (employee) => {
       .regex(/^[0-9a-fA-F]{24}$/)
       .required(),
   }).unknown();
-  return schema.validate(employee);
+  const { error } = schema.validate(request.body);
+  if (error) {
+    throw CustomHTTPError.BadRequest(error.details[0].message);
+  }
+  next();
 };
 
 module.exports = employeeValidator;

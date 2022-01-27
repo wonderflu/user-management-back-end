@@ -1,18 +1,18 @@
 const TokenService = require("../services/token");
-const ClientError = require("../errors");
+const CustomHTTPError = require("../errors");
 
 const auth = (request, response, next) => {
   const authorizationHeader = request.headers.authorization;
   if (!authorizationHeader) {
-    throw ClientError.UnauthorizedError();
+    throw CustomHTTPError.UnauthorizedError();
   }
   const accessToken = authorizationHeader.split(" ")[1];
   if (!accessToken) {
-    throw ClientError.UnauthorizedError();
+    throw CustomHTTPError.UnauthorizedError();
   }
   const userData = TokenService.decodeAccessToken(accessToken);
   if (!userData) {
-    throw ClientError.UnauthorizedError();
+    throw CustomHTTPError.UnauthorizedError();
   }
   request.user = userData;
   next();
