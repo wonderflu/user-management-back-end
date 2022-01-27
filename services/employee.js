@@ -6,22 +6,27 @@ const CustomHTTPError = require("../errors");
 const mongoose = require("mongoose");
 
 class EmployeeService {
-  async createNewEmployee(employee, picture) {
-    const fileName = FileService.saveFile(picture);
+  async createNewEmployee(employee, files) {
     const { username, email, department } = employee;
     const usernameDuplicate = await EmployeeSchema.findOne({ username });
     if (usernameDuplicate) {
-      throw CustomHTTPError.BadRequest(`User with such ${username} already exists.`);
+      throw CustomHTTPError.BadRequest(`Employee with the specified username (${username}) already exists.`);
     }
     const emailDuplicate = await EmployeeSchema.findOne({ email });
     if (emailDuplicate) {
-      throw CustomHTTPError.BadRequest(`User with such ${email} already exists.`);
+      throw CustomHTTPError.BadRequest(`Employee with the specified email (${email}) already exists.`);
     }
     const checkDepartmentExistence = await DepartmentSchema.findById(department);
     if (!checkDepartmentExistence) {
       throw CustomHTTPError.BadRequest("Department with such ID does not exist.");
     }
-    const createdEmployee = await EmployeeSchema.create({ ...employee, picture: fileName });
+    let createdEmployee;
+    if (files) {
+      const fileName = FileService.saveFile(files.picture);
+      createdEmployee = await EmployeeSchema.create({ ...employee, picture: fileName });
+    } else {
+      createdEmployee = await EmployeeSchema.create({ ...employee });
+    }
     return createdEmployee;
   }
   async getEmployeesByDepartmentID(departmentID) {

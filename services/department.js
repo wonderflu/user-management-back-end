@@ -10,7 +10,7 @@ class DepartmentService {
     const { name } = department;
     const departmentDuplicate = await DepartmentSchema.findOne({ name });
     if (departmentDuplicate) {
-      throw CustomHTTPError.BadRequest("Department with such name already exists.");
+      throw CustomHTTPError.BadRequest(`Department with the specified name (${name}) already exists.`);
     }
     let createdDepartment;
     if (files) {

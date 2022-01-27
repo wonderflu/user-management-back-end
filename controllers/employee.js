@@ -2,7 +2,7 @@ const EmployeeService = require("../services/employee");
 
 class EmployeeController {
   async createNewEmployee(request, response, next) {
-    const employee = await EmployeeService.createNewEmployee(request.body, request.files.picture);
+    const employee = await EmployeeService.createNewEmployee(request.body, request.files);
     response.json({ employee });
   }
   async getEmployeeByID(request, response, next) {
