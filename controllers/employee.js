@@ -10,7 +10,7 @@ class EmployeeController {
     response.json({ employeeByID });
   }
   async updateEmployeeByID(request, response, next) {
-    const updatedEmployee = await EmployeeService.updateDepartmentByID(request.body);
+    const updatedEmployee = await EmployeeService.updateEmployeeByID(request.params.id, request.body);
     response.json({ updatedEmployee });
   }
   async deleteEmployeeByID(request, response, next) {

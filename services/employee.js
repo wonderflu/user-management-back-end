@@ -11,35 +11,29 @@ class EmployeeService {
     const { username, email, department } = employee;
     const usernameDuplicate = await EmployeeSchema.findOne({ username });
     if (usernameDuplicate) {
-      throw CustomHTTPError.BadRequest(`User with such ${username} already exists.`, [
-        { username: "This field should be unique" },
-      ]);
+      throw CustomHTTPError.BadRequest(`User with such ${username} already exists.`);
     }
     const emailDuplicate = await EmployeeSchema.findOne({ email });
     if (emailDuplicate) {
-      throw CustomHTTPError.BadRequest(`User with such ${email} already exists.`, [
-        { email: "This field should be unique" },
-      ]);
+      throw CustomHTTPError.BadRequest(`User with such ${email} already exists.`);
     }
     const checkDepartmentExistence = await DepartmentSchema.findById(department);
     if (!checkDepartmentExistence) {
-      throw CustomHTTPError.BadRequest("Department with such ID does not exist.", [
-        { department: "Department should exist" },
-      ]);
+      throw CustomHTTPError.BadRequest("Department with such ID does not exist.");
     }
     const createdEmployee = await EmployeeSchema.create({ ...employee, picture: fileName });
     return createdEmployee;
   }
   async getEmployeesByDepartmentID(departmentID) {
     if (!mongoose.Types.ObjectId.isValid(departmentID)) {
-      throw CustomHTTPError.BadRequest("Department ID is invalid");
+      throw CustomHTTPError.BadRequest("Invalid Department ID");
     }
     const employeesByDepartmentID = await EmployeeSchema.find({ department: departmentID });
     return employeesByDepartmentID;
   }
   async getEmployeeByID(id) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw CustomHTTPError.BadRequest("ID is invalid");
+      throw CustomHTTPError.BadRequest("Invalid ID");
     }
     const employeeById = await EmployeeSchema.findById(id);
     if (!employeeById) {
@@ -47,18 +41,27 @@ class EmployeeService {
     }
     return employeeById;
   }
-  async updateEmployeeByID(employee) {
-    if (!mongoose.Types.ObjectId.isValid(employee._id)) {
-      throw CustomHTTPError.BadRequest("ID is invalid");
+  async updateEmployeeByID(id, employee) {
+    const { email, first_name, last_name } = employee;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw CustomHTTPError.BadRequest("Invalid ID");
     }
-    const updatedEmployee = await EmployeeSchema.findByIdAndUpdate(employee._id, employee, {
-      new: true,
-    });
+    let updatedEmployeeData = {};
+    if (email) {
+      updatedEmployeeData.email = email;
+    }
+    if (first_name) {
+      updatedEmployeeData.first_name = first_name;
+    }
+    if (last_name) {
+      updatedEmployeeData.last_name = last_name;
+    }
+    const updatedEmployee = await EmployeeSchema.findByIdAndUpdate(id, updatedEmployeeData, { new: true });
     return updatedEmployee;
   }
   async deleteEmployeeByID(id) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw CustomHTTPError.BadRequest("ID is invalid");
+      throw CustomHTTPError.BadRequest("Invalid ID");
     }
     const employeeToDelete = await EmployeeSchema.findByIdAndDelete(id);
     return employeeToDelete;

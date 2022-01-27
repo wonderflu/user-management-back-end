@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const CustomHTTPError = require("../errors");
 
-const employeeValidator = (request, response, next) => {
+module.exports.employeeValidator = (request, response, next) => {
   const schema = Joi.object({
     username: Joi.string().alphanum().min(3).max(15).required(),
     email: Joi.string()
@@ -22,4 +22,19 @@ const employeeValidator = (request, response, next) => {
   next();
 };
 
-module.exports = employeeValidator;
+module.exports.employeeValidatorPatch = (request, response, next) => {
+  const schema = Joi.object({
+    email: Joi.string()
+      .min(5)
+      .max(30)
+      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+      .optional(),
+    first_name: Joi.string().alphanum().min(1).max(20).optional(),
+    last_name: Joi.string().alphanum().min(1).max(20).optional(),
+  }).unknown();
+  const { error } = schema.validate(request.body);
+  if (error) {
+    throw CustomHTTPError.BadRequest(error.details[0].message);
+  }
+  next();
+};

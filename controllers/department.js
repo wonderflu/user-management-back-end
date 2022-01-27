@@ -3,7 +3,7 @@ const EmployeeService = require("../services/employee");
 
 class DepartmentController {
   async createNewDepartment(request, response, next) {
-    const department = await DepartmentService.createNewDepartment(request.body, request.files.picture);
+    const department = await DepartmentService.createNewDepartment(request.body, request.files);
     response.json({ department });
   }
   async getDepartments(request, response, next) {
@@ -19,8 +19,8 @@ class DepartmentController {
     response.json({ employees });
   }
   async updateDepartmentByID(request, response, next) {
-    const updatedDepartment = await DepartmentService.updateDepartmentByID(request.body);
-    response.json({ updatedDepartment });
+    const updatedDescription = await DepartmentService.updateDepartmentByID(request.params.id, request.body.description);
+    response.json({ updatedDescription });
   }
   async deleteDepartmentByID(request, response, next) {
     const departmentToDelete = await DepartmentService.deleteDepartmentByID(request.params.id);

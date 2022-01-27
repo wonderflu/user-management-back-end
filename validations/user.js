@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const CustomHTTPError = require("../errors");
 
-const userValidator = (request, response, next) => {
+module.exports.userValidator = (request, response, next) => {
   const schema = Joi.object({
     username: Joi.string().alphanum().min(3).max(15).required(),
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
@@ -12,5 +12,3 @@ const userValidator = (request, response, next) => {
   }
   next();
 };
-
-module.exports = userValidator;
