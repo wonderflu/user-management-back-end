@@ -7,7 +7,7 @@ class DepartmentController {
     response.json({ department });
   }
   async getDepartments(request, response, next) {
-    const departments = await DepartmentService.getDepartments();
+    const departments = await DepartmentService.getDepartments(request.query);
     response.json({ departments });
   }
   async getDepartmentByID(request, response, next) {

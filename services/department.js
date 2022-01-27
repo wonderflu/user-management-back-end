@@ -21,9 +21,29 @@ class DepartmentService {
     }
     return createdDepartment;
   }
-  async getDepartments() {
-    const departments = await DepartmentSchema.find();
-    return departments;
+  async getDepartments(query) {
+    const page = parseInt(query.page) || 1;
+    const limit = parseInt(query.limit) || 10;
+    const sortBy = ["asc", "desc"].indexOf(query.sort) < 0 ? "asc" : query.sort;
+    const search = query.q;
+    const filter_query = search ? { name: new RegExp("^" + search, "i") } : {};
+    const total = await DepartmentSchema.find({}).where(filter_query).count();
+    const results = {
+      currentPage: page,
+      limit: limit,
+      sortBy: sortBy,
+      search: search,
+      total: total,
+    };
+    const departments = await DepartmentSchema.find({})
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ name: sortBy })
+      .where(filter_query);
+    return {
+      results,
+      departments,
+    };
   }
   async getDepartmentByID(id) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
