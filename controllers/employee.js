@@ -1,31 +1,22 @@
-const Employee = require("../models/employee");
+const EmployeeService = require("../services/employee");
 
-class employeeController {
-  async getEmployees(request, response) {
-    try {
-      const employees = await Employee.find();
-      return response.status(200).json({ employees });
-    } catch (e) {
-      console.log(e);
-      return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
-    }
-  }
-  async postNewEmployee(request, response) {
-    try {
-    } catch (e) {}
+class EmployeeController {
+  async createNewEmployee(request, response) {
+    const employee = await EmployeeService.createNewEmployee(request.body, request.files);
+    response.json({ employee });
   }
   async getEmployeeByID(request, response) {
-    try {
-    } catch (e) {}
+    const employeeByID = await EmployeeService.getEmployeeByID(request.params.id);
+    response.json({ employeeByID });
   }
   async updateEmployeeByID(request, response) {
-    try {
-    } catch (e) {}
+    const updatedEmployee = await EmployeeService.updateEmployeeByID(request.params.id, request.body);
+    response.json({ updatedEmployee });
   }
   async deleteEmployeeByID(request, response) {
-    try {
-    } catch (e) {}
+    const employeeToDelete = await EmployeeService.deleteEmployeeByID(request.params.id);
+    response.json({ employeeToDelete });
   }
 }
 
-module.exports = new employeeController();
+module.exports = new EmployeeController();

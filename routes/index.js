@@ -1,19 +1,23 @@
 const Router = require("express");
+
+const { VERSION } = require("../config");
 const userRouter = require("./user");
+const { authMiddleware } = require("../middlewares/auth");
+const { isAdmin } = require("../middlewares/isAdmin");
 const departmentRouter = require("./department");
 const employeeRouter = require("./employee");
+const CustomHTTPError = require("../errors");
 
 const router = new Router();
-const VERSION = "v1";
 
-router.use(`/api/${VERSION}`, departmentRouter);
-router.use(`/api/${VERSION}`, employeeRouter);
-router.use(`/api/${VERSION}`, userRouter);
+router.use(`/${VERSION}`, userRouter);
+router.use(`/${VERSION}`, authMiddleware);
+router.use(`/${VERSION}/*`, isAdmin);
+router.use(`/${VERSION}`, departmentRouter);
+router.use(`/${VERSION}`, employeeRouter);
 
-router.get("*", (request, response) => {
-  return response
-    .status(404)
-    .json({ message: "Not Found: Whooops! Page with such url doesn't exist, try again!" });
+router.all("*", (request, response, next) => {
+  next(CustomHTTPError.NotFound());
 });
 
 module.exports = router;

@@ -1,11 +1,16 @@
 const Router = require("express");
-const departmentRouter = new Router();
-const controller = require("../controllers/department");
 
-departmentRouter.get(`/departments`, controller.getDepartments);
-departmentRouter.post(`/departments/new`, controller.postNewDepartment);
-departmentRouter.get(`/departments/:id`, controller.getDepartmentByID);
-departmentRouter.put(`/departments/:id/edit`, controller.updateDepartmentByID);
-departmentRouter.delete(`/departments/:id/delete`, controller.deleteDepartmentByID);
+const { departmentValidator, departmentValidatorPatch } = require("../validations/department");
+const { errorHandlerAsync } = require("../middlewares/errorHandlerAsync");
+const DepartmentController = require("../controllers/department");
+
+const departmentRouter = new Router();
+
+departmentRouter.post(`/departments`, departmentValidator, errorHandlerAsync(DepartmentController.createNewDepartment));
+departmentRouter.get(`/departments`, errorHandlerAsync(DepartmentController.getDepartments));
+departmentRouter.get(`/departments/:id`, errorHandlerAsync(DepartmentController.getDepartmentByID));
+departmentRouter.get(`/departments/:id/employees`, errorHandlerAsync(DepartmentController.getEmployeesByDepartmentID));
+departmentRouter.patch(`/departments/:id`, departmentValidatorPatch, errorHandlerAsync(DepartmentController.updateDepartmentByID));
+departmentRouter.delete(`/departments/:id`, errorHandlerAsync(DepartmentController.deleteDepartmentByID));
 
 module.exports = departmentRouter;

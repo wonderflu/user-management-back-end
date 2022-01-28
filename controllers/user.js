@@ -1,34 +1,30 @@
-const User = require("../models/user");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET_KEY } = require("../config");
-const generateAccessToken = (id, role) => {
-  const payload = {
-    id,
-    role,
-  };
-  return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "24h" });
-};
+const UserService = require("../services/user");
 
-class userController {
+class UserController {
   async login(request, response) {
-    try {
-      const { username, password } = request.body;
-      const user = await User.findOne({ username });
-      if (!user) {
-        return response.status(400).json({ message: `Bad request: User with such ${username} is not found` });
-      }
-      const validPassword = bcrypt.compareSync(password, user.password);
-      if (!validPassword) {
-        return response.status(400).json({ message: "Bad request: The password is incorrect" });
-      }
-      const token = generateAccessToken(user._id, user.role);
-      return response.json({ token });
-    } catch (e) {
-      console.log(e);
-      return response.status(500).json({ message: "Internal Server Error: Could not fulfil your request." });
-    }
+    const { username, password } = request.body;
+    const user = await UserService.login(username, password);
+    response.cookie("refreshToken", user.refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    response.json({ user });
+  }
+  async logout(request, response) {
+    const { refreshToken } = request.cookies;
+    const token = await UserService.logout(refreshToken);
+    response.clearCookie("refreshToken");
+    response.json({ token });
+  }
+  async refreshToken(request, response) {
+    const { refreshToken } = request.cookies;
+    const userData = await UserService.refreshToken(refreshToken);
+    response.cookie("refreshToken", userData.refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    response.json({ userData });
   }
 }
 
-module.exports = new userController();
+module.exports = new UserController();
