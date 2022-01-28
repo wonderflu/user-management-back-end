@@ -1,18 +1,18 @@
-const seedUsers = require("./seedUser");
 const UserSchema = require("../models/user");
+const SeedUsers = require("./seedUser");
 
-const checkUserExistence = async () => {
+module.exports.checkUserExistence = async () => {
   try {
     const adminCount = await UserSchema.find({ role: "ADMIN" }).count();
     if (!adminCount) {
-      const createdAdmin = await seedUsers.createAdmin();
+      const createdAdmin = await SeedUsers.createAdmin();
       console.log(`role: ${createdAdmin.role}`);
       console.log(`username: ${createdAdmin.username}`);
       console.log(`password: ${createdAdmin.password}`);
     }
     const userCount = await UserSchema.find({ role: "USER" }).count();
     if (!userCount) {
-      const createdUser = await seedUsers.createUser();
+      const createdUser = await SeedUsers.createUser();
       console.log(`role: ${createdUser.role}`);
       console.log(`username: ${createdUser.username}`);
       console.log(`password: ${createdUser.password}`);
@@ -21,5 +21,3 @@ const checkUserExistence = async () => {
     console.error(error);
   }
 };
-
-module.exports = checkUserExistence;

@@ -1,7 +1,7 @@
 const TokenService = require("../services/token");
 const CustomHTTPError = require("../errors");
 
-const auth = (request, response, next) => {
+module.exports.authMiddleware = (request, response, next) => {
   const authorizationHeader = request.headers.authorization;
   if (!authorizationHeader) {
     throw CustomHTTPError.UnauthorizedError();
@@ -17,5 +17,3 @@ const auth = (request, response, next) => {
   request.user = userData;
   next();
 };
-
-module.exports = auth;

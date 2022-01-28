@@ -1,8 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 
-const routesInitializer = require("./initialization/routes");
-const databaseInitializer = require("./initialization/database");
+const { routesInitializer } = require("./initialization/routes");
+const { databaseInitializer } = require("./initialization/database");
 const { PORT } = require("./config");
 
 const app = express();

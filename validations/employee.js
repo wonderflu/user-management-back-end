@@ -9,8 +9,8 @@ module.exports.employeeValidator = (request, response, next) => {
       .max(30)
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
       .required(),
-    first_name: Joi.string().alphanum().min(1).max(20).required(),
-    last_name: Joi.string().alphanum().min(1).max(20).required(),
+    firstName: Joi.string().alphanum().min(1).max(20).required(),
+    lastName: Joi.string().alphanum().min(1).max(20).required(),
     department: Joi.string()
       .regex(/^[0-9a-fA-F]{24}$/)
       .required(),
@@ -29,8 +29,8 @@ module.exports.employeeValidatorPatch = (request, response, next) => {
       .max(30)
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
       .optional(),
-    first_name: Joi.string().alphanum().min(1).max(20).optional(),
-    last_name: Joi.string().alphanum().min(1).max(20).optional(),
+    firstName: Joi.string().alphanum().min(1).max(20).optional(),
+    lastName: Joi.string().alphanum().min(1).max(20).optional(),
   }).unknown();
   const { error } = schema.validate(request.body);
   if (error) {

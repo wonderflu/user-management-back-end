@@ -17,13 +17,13 @@ const EmployeeSchema = new Schema(
       minlength: 5,
       maxlength: 30,
     },
-    first_name: {
+    firstName: {
       type: String,
       required: [true, "First Name is required."],
       minlength: 1,
       maxlength: 20,
     },
-    last_name: {
+    lastName: {
       type: String,
       required: [true, "Last Name is required."],
       minlength: 1,

@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const { DATABASE_URL } = require("../config");
-const checkUserExistence = require("../seed/checkUserExistence");
+const { checkUserExistence } = require("../seed/checkUserExistence");
 
-const databaseInitializer = async () => {
+module.exports.databaseInitializer = async () => {
   try {
     await mongoose.connect(DATABASE_URL);
     console.log("Connected to MongoDB.");
@@ -11,5 +11,3 @@ const databaseInitializer = async () => {
     console.error(error);
   }
 };
-
-module.exports = databaseInitializer;

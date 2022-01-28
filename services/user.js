@@ -1,9 +1,9 @@
+const bcrypt = require("bcryptjs");
+
 const UserSchema = require("../models/user");
 const UserDto = require("../dtos/user");
 const TokenService = require("./token");
 const CustomHTTPError = require("../errors");
-
-const bcrypt = require("bcryptjs");
 
 class UserService {
   async login(username, password) {
@@ -40,4 +40,5 @@ class UserService {
     return { tokens, user: userDto };
   }
 }
+
 module.exports = new UserService();

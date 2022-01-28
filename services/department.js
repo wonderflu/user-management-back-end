@@ -1,9 +1,9 @@
+const mongoose = require("mongoose");
+
 const DepartmentSchema = require("../models/department");
 const EmployeeSchema = require("../models/employee");
 const FileService = require("./file");
 const CustomHTTPError = require("../errors");
-
-const mongoose = require("mongoose");
 
 class DepartmentService {
   async createNewDepartment(department, files) {
@@ -12,34 +12,29 @@ class DepartmentService {
     if (departmentDuplicate) {
       throw CustomHTTPError.BadRequest(`Department with the specified name (${name}) already exists.`);
     }
-    let createdDepartment;
-    if (files) {
-      const fileName = FileService.saveFile(files.picture);
-      createdDepartment = await DepartmentSchema.create({ ...department, picture: fileName });
-    } else {
-      createdDepartment = await DepartmentSchema.create({ ...department });
-    }
+    const picture = files ? FileService.saveFile(files.picture) : undefined;
+    const createdDepartment = await DepartmentSchema.create({ ...department, picture });
     return createdDepartment;
   }
   async getDepartments(query) {
     const page = parseInt(query.page) || 1;
     const limit = parseInt(query.limit) || 10;
     const sortBy = ["asc", "desc"].indexOf(query.sort) < 0 ? "asc" : query.sort;
-    const search = query.q;
-    const filter_query = search ? { name: new RegExp("^" + search, "i") } : {};
-    const total = await DepartmentSchema.find({}).where(filter_query).count();
+    const search = query.q && query.q.replace(/[^a-zA-Z0-9 ]/g, "");
+    const filterQuery = search ? { name: new RegExp("^" + search, "i") } : {};
+    const total = await DepartmentSchema.find({}).where(filterQuery).count();
     const results = {
       currentPage: page,
-      limit: limit,
-      sortBy: sortBy,
-      search: search,
-      total: total,
+      limit,
+      sortBy,
+      search,
+      total,
     };
     const departments = await DepartmentSchema.find({})
-      .limit(limit * 1)
+      .limit(limit)
       .skip((page - 1) * limit)
       .sort({ name: sortBy })
-      .where(filter_query);
+      .where(filterQuery);
     return {
       results,
       departments,

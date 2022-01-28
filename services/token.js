@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
-const TokenSchema = require("../models/token");
 const { JWT_ACCESS_KEY, JWT_REFRESH_KEY } = require("../config");
+const TokenSchema = require("../models/token");
 
 class TokenService {
   generateTokens(payload) {

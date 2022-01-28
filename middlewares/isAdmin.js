@@ -1,6 +1,6 @@
 const CustomHTTPError = require("../errors");
 
-const isAdmin = (request, response, next) => {
+module.exports.isAdmin = (request, response, next) => {
   if (["POST", "PATCH", "PUT", "DELETE"].indexOf(request.method) > -1) {
     if (request.user.role != "ADMIN") {
       throw CustomHTTPError.Forbidden();
@@ -8,5 +8,3 @@ const isAdmin = (request, response, next) => {
   }
   next();
 };
-
-module.exports = isAdmin;

@@ -1,9 +1,10 @@
 const Router = require("express");
-const departmentRouter = new Router();
 
 const { departmentValidator, departmentValidatorPatch } = require("../validations/department");
-const errorHandlerAsync = require("../middlewares/errorHandlerAsync");
+const { errorHandlerAsync } = require("../middlewares/errorHandlerAsync");
 const DepartmentController = require("../controllers/department");
+
+const departmentRouter = new Router();
 
 departmentRouter.post(`/departments`, departmentValidator, errorHandlerAsync(DepartmentController.createNewDepartment));
 departmentRouter.get(`/departments`, errorHandlerAsync(DepartmentController.getDepartments));

@@ -1,9 +1,10 @@
 const Router = require("express");
-const employeeRouter = new Router();
 
 const { employeeValidator, employeeValidatorPatch } = require("../validations/employee");
-const errorHandlerAsync = require("../middlewares/errorHandlerAsync");
+const { errorHandlerAsync } = require("../middlewares/errorHandlerAsync");
 const EmployeeController = require("../controllers/employee");
+
+const employeeRouter = new Router();
 
 employeeRouter.post(`/employees`, employeeValidator, errorHandlerAsync(EmployeeController.createNewEmployee));
 employeeRouter.get(`/employees/:id`, errorHandlerAsync(EmployeeController.getEmployeeByID));

@@ -1,9 +1,9 @@
+const mongoose = require("mongoose");
+
 const EmployeeSchema = require("../models/employee");
 const DepartmentSchema = require("../models/department");
 const FileService = require("./file");
 const CustomHTTPError = require("../errors");
-
-const mongoose = require("mongoose");
 
 class EmployeeService {
   async createNewEmployee(employee, files) {
@@ -20,13 +20,8 @@ class EmployeeService {
     if (!checkDepartmentExistence) {
       throw CustomHTTPError.BadRequest("Department with such ID does not exist.");
     }
-    let createdEmployee;
-    if (files) {
-      const fileName = FileService.saveFile(files.picture);
-      createdEmployee = await EmployeeSchema.create({ ...employee, picture: fileName });
-    } else {
-      createdEmployee = await EmployeeSchema.create({ ...employee });
-    }
+    const picture = files ? FileService.saveFile(files.picture) : undefined;
+    const createdEmployee = await EmployeeSchema.create({ ...employee, picture });
     return createdEmployee;
   }
   async getEmployeesByDepartmentID(departmentID) {
@@ -47,7 +42,7 @@ class EmployeeService {
     return employeeById;
   }
   async updateEmployeeByID(id, employee) {
-    const { email, first_name, last_name } = employee;
+    const { email, firstName, lastName } = employee;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw CustomHTTPError.BadRequest("Invalid ID");
     }
@@ -55,11 +50,11 @@ class EmployeeService {
     if (email) {
       updatedEmployeeData.email = email;
     }
-    if (first_name) {
-      updatedEmployeeData.first_name = first_name;
+    if (firstName) {
+      updatedEmployeeData.firstName = firstName;
     }
-    if (last_name) {
-      updatedEmployeeData.last_name = last_name;
+    if (lastName) {
+      updatedEmployeeData.lastName = lastName;
     }
     const updatedEmployee = await EmployeeSchema.findByIdAndUpdate(id, updatedEmployeeData, { new: true });
     return updatedEmployee;

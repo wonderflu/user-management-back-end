@@ -4,9 +4,9 @@ const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 
 const router = require("../routes");
-const errorMiddleware = require("../middlewares/errorHandler");
+const { errorHandler } = require("../middlewares/errorHandler");
 
-const routesInitializer = (app) => {
+module.exports.routesInitializer = (app) => {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use(express.static("avatars"));
@@ -19,7 +19,5 @@ const routesInitializer = (app) => {
   );
   app.use(express.json());
   app.use("/api", router);
-  app.use(errorMiddleware);
+  app.use(errorHandler);
 };
-
-module.exports = routesInitializer;
