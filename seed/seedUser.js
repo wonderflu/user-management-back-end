@@ -7,9 +7,11 @@ class SeedUsers {
     try {
       const role = "ADMIN";
       const username = "Admin";
-      const hashPassword = await bcrypt.hash("danger", SALT);
+      const password = "danger";
+      const hashPassword = await bcrypt.hash(password, SALT);
       const userData = { role: role, username: username, password: hashPassword };
       await UserSchema.create({ ...userData });
+      userData.password = password;
       return userData;
     } catch (error) {
       console.error(error);
@@ -19,9 +21,11 @@ class SeedUsers {
     try {
       const role = "USER";
       const username = "User";
-      const hashPassword = await bcrypt.hash("danger", SALT);
+      const password = "danger";
+      const hashPassword = await bcrypt.hash(password, SALT);
       const userData = { role: role, username: username, password: hashPassword };
       await UserSchema.create({ ...userData });
+      userData.password = password;
       return userData;
     } catch (error) {
       console.error(error);
