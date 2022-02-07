@@ -13,7 +13,7 @@ module.exports.routesInitializer = (app) => {
   app.use(fileUpload({}));
   app.use(
     cors({
-      origin: "*",
+      origin: "http://localhost:3000", // hardcoded port for frontend
       credentials: true,
     })
   );
