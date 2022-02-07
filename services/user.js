@@ -33,7 +33,7 @@ class UserService {
     if (!userData || !tokenFromDB) {
       throw CustomHTTPError.UnauthorizedError();
     }
-    const user = await UserSchema.findById(user.id);
+    const user = await UserSchema.findById(userData.id);
     const userDto = new UserDto(user);
     const tokens = TokenService.generateTokens({ ...userDto });
     await TokenService.saveToken(userDto.id, tokens.refreshToken);
