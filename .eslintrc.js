@@ -53,7 +53,7 @@ module.exports = {
     'jsx-quotes': 'error',
     'key-spacing': 'error',
     'keyword-spacing': 'error',
-    'linebreak-style': 'error',
+    // 'linebreak-style': 'error',
     'max-classes-per-file': 'error',
     'max-depth': 'error',
     'max-len': [
