@@ -10,13 +10,12 @@ export class DatabaseInitializer implements IApplicationInitializer {
 
   initialize(): Promise<void> {
     return getConnection().transaction(async (entityManager: EntityManager) => {
-      const SALT = '$2a$10$9R009IGXFLhOqX.nQjFPmu';
       const userCount = await entityManager.count(User);
       if (!userCount) {
         const user = new User();
         user.role = Role.USER;
         user.username = 'User';
-        user.password = await bcrypt.hash('danger', SALT);
+        user.password = await bcrypt.hash('danger', process.env.SALT);
         this.logger.log(
           `role: ${user.role} username: ${user.username} password: ${user.password}`,
         );
@@ -25,7 +24,7 @@ export class DatabaseInitializer implements IApplicationInitializer {
         const admin = new User();
         admin.role = Role.ADMIN;
         admin.username = 'Admin';
-        admin.password = await bcrypt.hash('danger', SALT);
+        admin.password = await bcrypt.hash('danger', process.env.SALT);
         this.logger.log(
           `role: ${admin.role} username: ${admin.username} password: ${admin.password}`,
         );

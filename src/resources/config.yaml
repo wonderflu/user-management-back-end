@@ -1,8 +1,8 @@
 app:
   port: 3000
 
-session:
-  cookie:
+session: 
+  cookie: #a cookie itself doesnt have user information, it just represents a key to the record that we have in the store itself
     secret: averylogphrasebiggerthanthirtytwochars #get env vars?
     max-age: 86400000 #24h in milliseconds
 

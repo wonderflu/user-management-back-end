@@ -7,23 +7,26 @@ import { ExceptionMessage } from 'src/exceptions/message.exception';
 
 @Injectable()
 export class UserService {
-  async login(loginDto: LoginDto): Promise<void> {
+  login(loginDto: LoginDto): Promise<User> {
+    return this.validateUser(loginDto);
+  }
+
+  async validateUser(loginDto: LoginDto): Promise<User> {
     const { username, password } = loginDto;
     let foundUser = null;
-
     try {
       foundUser = await this.findByUsername(username);
-    } catch (e) {
-      if (e instanceof EntityNotFoundError) {
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
         throw new UnauthorizedException(ExceptionMessage.INVALID_USERNAME);
       }
-      throw new e();
+      throw new error();
     }
-
     const verifiedPassword = await bcrypt.compare(password, foundUser.password);
     if (!verifiedPassword) {
       throw new UnauthorizedException(ExceptionMessage.INVALID_PASSWORD);
     }
+    return foundUser;
   }
 
   findById(id: number): Promise<User> {

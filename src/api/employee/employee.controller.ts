@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -17,12 +18,17 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Roles } from '../user/decorators/roles.decorator';
+import { AuthGuard } from '../user/guards/auth.guard';
+import { RolesGuard } from '../user/guards/roles.guard';
+import { Role } from '../user/role.enum';
 import { CreateEmployeeDto, UpdateEmployeeDto } from './dto';
 import { EmployeeService } from './employee.service';
 import { Employee } from './entities/employee.entity';
 
 @ApiTags('Employees')
 @Controller('api/v2/employees')
+@UseGuards(AuthGuard)
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
@@ -41,13 +47,12 @@ export class EmployeeController {
   @ApiUnauthorizedResponse({
     description: 'User is not authorized',
   })
-  async createNewEmployee(
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  createNewEmployee(
     @Body() createEmployeeDto: CreateEmployeeDto,
   ): Promise<Employee> {
-    const createdEmployee = await this.employeeService.createNewEmployee(
-      createEmployeeDto,
-    );
-    return createdEmployee;
+    return this.employeeService.createNewEmployee(createEmployeeDto);
   }
 
   @ApiOperation({ summary: 'Getting One Employee By ID' })
@@ -60,7 +65,8 @@ export class EmployeeController {
   @ApiOperation({ summary: 'Updating Employee By Employee ID' })
   @Patch(':id')
   @ApiOkResponse({ type: Employee })
-  // @Roles('ADMIN')
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
   updateEmployeeByID(
     @Param('id') id: number,
     @Body() updateEmployeeDto: UpdateEmployeeDto,
@@ -73,7 +79,8 @@ export class EmployeeController {
   @ApiNoContentResponse({
     description: 'The Department has been successfully removed',
   })
-  // @Roles('ADMIN')
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
   deleteEmployeeByID(@Param('id') id: number): Promise<void> {
     return this.employeeService.deleteEmployeeByID(id);
   }

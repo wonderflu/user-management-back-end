@@ -9,7 +9,6 @@ import { Employee } from './entities/employee.entity';
 export class EmployeeService {
   createNewEmployee(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
     const { username, email, department } = createEmployeeDto;
-    console.log(typeof department);
 
     return getConnection().transaction(async (entityManager: EntityManager) => {
       const duplicateUsername = await entityManager.count(Employee, {
@@ -37,11 +36,6 @@ export class EmployeeService {
     });
   }
 
-  // getEmployeesByDepartmentID(): Promise<Employee[]> {
-  //   return getConnection().transaction((entityManager: EntityManager) => {
-  //     return entityManager.find(Employee);
-  //   });
-  // }
   getEmployeeByID(id: number): Promise<Employee> {
     return getConnection().transaction((entityManager: EntityManager) => {
       return entityManager.findOneOrFail(Employee, id);

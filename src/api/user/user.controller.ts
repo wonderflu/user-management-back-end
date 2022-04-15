@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Session } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Session as SessionData } from 'express-session';
 import { LoginDto } from './dto/user.login.dto';
+import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
 @ApiTags('Authorization')
@@ -14,9 +15,9 @@ export class UserController {
   async login(
     @Session() session: SessionData,
     @Body() loginDto: LoginDto,
-  ): Promise<void> {
-    await this.userService.login(loginDto);
-    return this.updateSession(session, loginDto);
+  ): Promise<void | User> {
+    const foundUser = await this.userService.login(loginDto);
+    return this.updateSession(session, foundUser);
   }
 
   @ApiOperation({ summary: 'Log out' })
@@ -30,9 +31,13 @@ export class UserController {
     });
   }
 
-  private updateSession(session: SessionData, user: LoginDto): void {
-    session.user = user.username;
-    console.log(user);
+  private updateSession(session: SessionData, foundUser: User): void {
+    session.user = foundUser.username;
     session.isAuthenticated = true;
+    if (foundUser.role === 'ADMIN') {
+      session.isAdmin = true;
+    } else {
+      session.isAdmin = false;
+    }
   }
 }

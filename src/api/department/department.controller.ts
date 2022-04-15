@@ -18,10 +18,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-// import { Roles } from '../user/decorators/roles.decorator';
+import { Roles } from '../user/decorators/roles.decorator';
 import { AuthGuard } from '../user/guards/auth.guard';
-// import { RolesGuard } from '../user/guards/roles.guard';
-// import { Role } from '../user/role.enum';
+import { RolesGuard } from '../user/guards/roles.guard';
+import { Role } from '../user/role.enum';
 import { DepartmentService } from './department.service';
 import { CreateDepartmentDto, UpdateDepartmentDto } from './dto';
 import { Department } from './entities/department.entity';
@@ -47,8 +47,8 @@ export class DepartmentController {
   @ApiUnauthorizedResponse({
     description: 'User is not authorized',
   })
-  // @Roles(Role.ADMIN) // basically it does nothing itself, to make it work we should use RolesGuard as well
-  // @UseGuards(RolesGuard)
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN) // basically it does nothing itself, to make it work we should use RolesGuard as well
   createNewDepartment(
     @Body() createDepartmentDto: CreateDepartmentDto,
   ): Promise<Department> {
@@ -79,8 +79,8 @@ export class DepartmentController {
   @ApiOperation({ summary: 'Updating Department Description By Department ID' })
   @Patch(':id')
   @ApiOkResponse({ type: Department })
-  // @Roles(Role.ADMIN) // basically it does nothing itself, to make it work we should use RolesGuard as well
-  // @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
   updateDepartmentByID(
     @Param('id') id: number,
     @Body() updateDepartmentDto: UpdateDepartmentDto,
@@ -93,8 +93,8 @@ export class DepartmentController {
   @ApiNoContentResponse({
     description: 'The Department has been successfully removed',
   })
-  // @Roles(Role.ADMIN) // basically it does nothing itself, to make it work we should use RolesGuard as well
-  // @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
   deleteDepartmentByID(@Param('id') id: number): Promise<void> {
     return this.departmentService.deleteDepartmentByID(id);
   }
