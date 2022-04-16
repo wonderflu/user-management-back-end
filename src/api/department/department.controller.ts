@@ -58,6 +58,9 @@ export class DepartmentController {
   @ApiOperation({ summary: 'Getting All Departments' })
   @Get()
   @ApiOkResponse({ type: Department })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorized',
+  })
   getDepartments(): Promise<Department[]> {
     return this.departmentService.getDepartments();
   }
@@ -65,6 +68,9 @@ export class DepartmentController {
   @ApiOperation({ summary: 'Getting One Department By ID' })
   @Get(':id')
   @ApiOkResponse({ type: Department })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorized',
+  })
   getDepartmentByID(@Param('id') id: number): Promise<Department> {
     return this.departmentService.getDepartmentByID(id);
   }
@@ -72,6 +78,9 @@ export class DepartmentController {
   @ApiOperation({ summary: 'Getting Employee List By Department ID' })
   @Get(':id/employees')
   @ApiOkResponse({ type: Department })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorized',
+  })
   getEmployeesByDepartmentID(@Param('id') id: number): Promise<Department> {
     return this.departmentService.getEmployeesByDepartmentID(id);
   }
@@ -79,6 +88,12 @@ export class DepartmentController {
   @ApiOperation({ summary: 'Updating Department Description By Department ID' })
   @Patch(':id')
   @ApiOkResponse({ type: Department })
+  @ApiForbiddenResponse({
+    description: 'You do not have permission to access this resource',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorized',
+  })
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   updateDepartmentByID(
@@ -92,6 +107,12 @@ export class DepartmentController {
   @Delete(':id')
   @ApiNoContentResponse({
     description: 'The Department has been successfully removed',
+  })
+  @ApiForbiddenResponse({
+    description: 'You do not have permission to access this resource',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorized',
   })
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)

@@ -58,6 +58,9 @@ export class EmployeeController {
   @ApiOperation({ summary: 'Getting One Employee By ID' })
   @Get(':id')
   @ApiOkResponse({ type: Employee })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorized',
+  })
   getEmployeeByID(@Param('id') id: number): Promise<Employee> {
     return this.employeeService.getEmployeeByID(id);
   }
@@ -65,6 +68,12 @@ export class EmployeeController {
   @ApiOperation({ summary: 'Updating Employee By Employee ID' })
   @Patch(':id')
   @ApiOkResponse({ type: Employee })
+  @ApiForbiddenResponse({
+    description: 'You do not have permission to access this resource',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorized',
+  })
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   updateEmployeeByID(
@@ -78,6 +87,12 @@ export class EmployeeController {
   @Delete(':id')
   @ApiNoContentResponse({
     description: 'The Department has been successfully removed',
+  })
+  @ApiForbiddenResponse({
+    description: 'You do not have permission to access this resource',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorized',
   })
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
