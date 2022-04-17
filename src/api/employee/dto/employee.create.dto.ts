@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+// import { Transform } from 'class-transformer';
 import { IsEmail, IsInt, IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateEmployeeDto {
@@ -49,7 +49,7 @@ export class CreateEmployeeDto {
     example: '1',
     description: 'Department ID',
   })
-  @Transform(value => Number.isNaN(+value) ? 0 : +value)
+  // @Transform(value => Number.isNaN(+value) ? 0 : +value)
   @IsNotEmpty({ message: 'This field cannot be empty' })
   @IsInt()
   department: number;

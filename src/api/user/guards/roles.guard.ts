@@ -24,10 +24,10 @@ export class RolesGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(
-      ROLES_KEY,
-      [context.getHandler(), context.getClass()], // 2 элемента, которые мы забираем у контекста, это делается для того...
-    ); // чтобы рефлектор понимал какие данные ему необходимо доставать
+    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
     if (!requiredRoles) {
       return false;
     }

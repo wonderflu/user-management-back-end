@@ -34,10 +34,6 @@ export class UserController {
   private updateSession(session: SessionData, foundUser: User): void {
     session.user = foundUser.username;
     session.isAuthenticated = true;
-    if (foundUser.role === 'ADMIN') {
-      session.isAdmin = true;
-    } else {
-      session.isAdmin = false;
-    }
+    session.isAdmin = foundUser.role === 'ADMIN';
   }
 }

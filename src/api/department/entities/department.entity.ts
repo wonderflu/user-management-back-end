@@ -39,17 +39,6 @@ export class Department {
   })
   description: string;
 
-  // @ApiProperty({
-  //   example: 'softserve-picture.png',
-  //   description: 'Department picture',
-  // })
-  // @Column({
-  //   name: 'picture',
-  //   type: 'blob',
-  //   nullable: true,
-  // })
-  // picture: string;
-
   @CreateDateColumn({
     name: 'createdAt',
     type: 'timestamp',

@@ -1,12 +1,19 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PaginateQuery, Paginated, paginate } from 'nestjs-paginate';
 import { ExceptionMessage } from 'src/exceptions/message.exception';
-import { EntityManager, getConnection } from 'typeorm';
+import { EntityManager, Repository, getConnection } from 'typeorm';
 import { Employee } from '../employee/entities/employee.entity';
 import { CreateDepartmentDto, UpdateDepartmentDto } from './dto';
 import { Department } from './entities/department.entity';
 
 @Injectable()
 export class DepartmentService {
+  constructor(
+    @InjectRepository(Department)
+    private readonly departmentRepository: Repository<Department>,
+  ) {}
+
   createNewDepartment(
     createDepartmentDto: CreateDepartmentDto,
   ): Promise<Department> {
@@ -25,9 +32,12 @@ export class DepartmentService {
     });
   }
 
-  getDepartments(): Promise<Department[]> {
-    return getConnection().transaction((entityManager: EntityManager) => {
-      return entityManager.find(Department);
+  getDepartments(query: PaginateQuery): Promise<Paginated<Department>> {
+    return paginate(query, this.departmentRepository, {
+      sortableColumns: ['name'],
+      searchableColumns: ['name'],
+      defaultSortBy: [['name', 'ASC']],
+      defaultLimit: 10,
     });
   }
 

@@ -18,6 +18,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
 import { Roles } from '../user/decorators/roles.decorator';
 import { AuthGuard } from '../user/guards/auth.guard';
 import { RolesGuard } from '../user/guards/roles.guard';
@@ -61,8 +62,10 @@ export class DepartmentController {
   @ApiUnauthorizedResponse({
     description: 'User is not authorized',
   })
-  getDepartments(): Promise<Department[]> {
-    return this.departmentService.getDepartments();
+  getDepartments(
+    @Paginate() query: PaginateQuery,
+  ): Promise<Paginated<Department>> {
+    return this.departmentService.getDepartments(query);
   }
 
   @ApiOperation({ summary: 'Getting One Department By ID' })
