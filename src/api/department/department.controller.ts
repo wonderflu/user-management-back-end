@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -18,7 +19,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
+import { ApiPaginatedResponse } from 'src/pagination/decorators/swagger.decorator';
+import { PageDto } from 'src/pagination/dto/page.dto';
+import { PageOptionsDto } from 'src/pagination/dto/page.options.dto';
 import { Roles } from '../user/decorators/roles.decorator';
 import { AuthGuard } from '../user/guards/auth.guard';
 import { RolesGuard } from '../user/guards/roles.guard';
@@ -58,14 +61,14 @@ export class DepartmentController {
 
   @ApiOperation({ summary: 'Getting All Departments' })
   @Get()
-  @ApiOkResponse({ type: Department })
+  @ApiPaginatedResponse(Department)
   @ApiUnauthorizedResponse({
     description: 'User is not authorized',
   })
   getDepartments(
-    @Paginate() query: PaginateQuery,
-  ): Promise<Paginated<Department>> {
-    return this.departmentService.getDepartments(query);
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<Department>> {
+    return this.departmentService.getDepartments(pageOptionsDto);
   }
 
   @ApiOperation({ summary: 'Getting One Department By ID' })

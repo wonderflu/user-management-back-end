@@ -22,14 +22,4 @@ export class CreateDepartmentDto {
       'The description must be at least 5 but not longer than 250 characters',
   })
   description: string;
-
-  // @ApiProperty({
-  //   example: 'softserve-picture.png',
-  //   description: 'Department picture',
-  // })
-  // @IsString()
-  // @Length(2, 50, {
-  //   message: 'The name must be at least 2 but not longer than 50 characters',
-  // })
-  // readonly picture: string;
 }

@@ -1,7 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginateQuery, Paginated, paginate } from 'nestjs-paginate';
 import { ExceptionMessage } from 'src/exceptions/message.exception';
+import { PageDto } from 'src/pagination/dto/page.dto';
+import { PageMetaDto } from 'src/pagination/dto/page.meta';
+import { PageOptionsDto } from 'src/pagination/dto/page.options.dto';
 import { EntityManager, Repository, getConnection } from 'typeorm';
 import { Employee } from '../employee/entities/employee.entity';
 import { CreateDepartmentDto, UpdateDepartmentDto } from './dto';
@@ -32,13 +34,23 @@ export class DepartmentService {
     });
   }
 
-  getDepartments(query: PaginateQuery): Promise<Paginated<Department>> {
-    return paginate(query, this.departmentRepository, {
-      sortableColumns: ['name'],
-      searchableColumns: ['name'],
-      defaultSortBy: [['name', 'ASC']],
-      defaultLimit: 10,
-    });
+  async getDepartments(
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<Department>> {
+    const queryBuilder =
+      this.departmentRepository.createQueryBuilder('department');
+
+    queryBuilder
+      .orderBy('department.name', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .limit(pageOptionsDto.limit);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+    return new PageDto(entities, pageMetaDto);
   }
 
   getDepartmentByID(id: number): Promise<Department> {
