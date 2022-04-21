@@ -43,12 +43,13 @@ export class DepartmentService {
     queryBuilder
       .orderBy('department.name', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
-      .limit(pageOptionsDto.limit);
+      .limit(pageOptionsDto.limit)
+      .where('department.name LIKE :name', { name: `%${pageOptionsDto.q}%` });
 
-    const itemCount = await queryBuilder.getCount();
+    const total = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
 
-    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+    const pageMetaDto = new PageMetaDto({ total, pageOptionsDto });
 
     return new PageDto(entities, pageMetaDto);
   }
