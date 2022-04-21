@@ -1,7 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
-import { Department } from 'src/api/department/entities/department.entity';
 import { Order } from '../order';
 
 export class PageOptionsDto {
@@ -11,7 +10,7 @@ export class PageOptionsDto {
   readonly order?: Order = Order.ASC;
 
   @ApiPropertyOptional({
-    type: Department,
+    type: 'object',
     additionalProperties: true,
   })
   @IsOptional()
