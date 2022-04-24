@@ -3,7 +3,7 @@ import { PageMetaDtoParameters } from '../page.params';
 
 export class PageMetaDto {
   @ApiProperty()
-  readonly q: string | any;
+  readonly search: string;
 
   @ApiProperty()
   readonly page: number;
@@ -24,7 +24,7 @@ export class PageMetaDto {
   readonly hasNextPage: boolean;
 
   constructor({ pageOptionsDto, total }: PageMetaDtoParameters) {
-    this.q = pageOptionsDto.q;
+    this.search = pageOptionsDto.search;
     this.page = pageOptionsDto.page;
     this.limit = pageOptionsDto.limit;
     this.total = total;

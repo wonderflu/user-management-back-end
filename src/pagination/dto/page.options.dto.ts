@@ -7,14 +7,11 @@ export class PageOptionsDto {
   @ApiPropertyOptional({ enum: Order, default: Order.ASC })
   @IsEnum(Order)
   @IsOptional()
-  readonly order?: Order = Order.ASC;
+  readonly sort?: Order = Order.ASC;
 
-  @ApiPropertyOptional({
-    type: 'object',
-    additionalProperties: true,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
-  readonly q?: Record<string, any>;
+  readonly search?: string;
 
   @ApiPropertyOptional({
     minimum: 1,

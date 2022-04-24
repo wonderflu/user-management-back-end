@@ -41,10 +41,14 @@ export class DepartmentService {
       this.departmentRepository.createQueryBuilder('department');
 
     queryBuilder
-      .orderBy('department.name', pageOptionsDto.order)
+      .orderBy('department.name', pageOptionsDto.sort)
       .skip(pageOptionsDto.skip)
-      .limit(pageOptionsDto.limit)
-      .where('department.name LIKE :name', { name: `%${pageOptionsDto.q}%` });
+      .limit(pageOptionsDto.limit);
+    if (pageOptionsDto.search) {
+      queryBuilder.where('department.name LIKE :name', {
+        name: `%${pageOptionsDto.search}%`,
+      });
+    }
 
     const total = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
