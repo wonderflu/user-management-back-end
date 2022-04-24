@@ -4,7 +4,7 @@ class UserController {
   async login(request, response) {
     const { username, password } = request.body;
     const user = await UserService.login(username, password);
-    response.cookie("refreshToken", user.refreshToken, {
+    response.cookie("refreshToken", user.tokens.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
@@ -19,7 +19,7 @@ class UserController {
   async refreshToken(request, response) {
     const { refreshToken } = request.cookies;
     const userData = await UserService.refreshToken(refreshToken);
-    response.cookie("refreshToken", userData.refreshToken, {
+    response.cookie("refreshToken", userData.tokens.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
